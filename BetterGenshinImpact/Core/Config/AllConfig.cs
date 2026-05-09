@@ -250,6 +250,10 @@ public partial class AllConfig : ObservableObject
     /// </summary>
     public DevConfig DevConfig { get; set; } = new();
 
+    /// <summary>
+    /// HTTP API 服务配置
+    /// </summary>
+    public ApiConfig ApiConfig { get; set; } = new();
 
     /// <summary>
     /// 硬件加速设置
@@ -290,6 +294,7 @@ public partial class AllConfig : ObservableObject
         PathingConditionConfig.PropertyChanged += OnAnyPropertyChanged;
         DevConfig.PropertyChanged += OnAnyPropertyChanged;
         HardwareAccelerationConfig.PropertyChanged += OnAnyPropertyChanged;
+        ApiConfig.PropertyChanged += OnAnyPropertyChanged;
         SkillCdConfig.PropertyChanged += OnAnyPropertyChanged;
         RevivePromptConfig.PropertyChanged += OnAnyPropertyChanged;
     }
