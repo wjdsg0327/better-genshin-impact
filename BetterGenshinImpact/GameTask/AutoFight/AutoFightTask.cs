@@ -438,7 +438,7 @@ public class AutoFightTask : ISoloTask
                         }
 
                         #region check动作触发战斗结束检测
-                        if (command.Method == Method.Check)
+                        if (command.Method == Method.Check && _taskParam.FightFinishDetectEnabled)
                         {
                             fightEndFlag = await CheckFightFinish(delayTime, detectDelayTime);
                         }
@@ -684,7 +684,12 @@ public class AutoFightTask : ISoloTask
                             picker.UseSkill(true);
                             await Delay(50, ct);
                             Simulation.SendInput.SimulateAction(GIActions.NormalAttack);
+                            await Delay(100, ct);
+                            Simulation.SendInput.SimulateAction(GIActions.NormalAttack);
+                            await Delay(100, ct);
+                            Simulation.SendInput.SimulateAction(GIActions.NormalAttack);
                             await Delay(1500, ct);
+                            picker.AfterUseSkill();
                         }
                     }
                     else
