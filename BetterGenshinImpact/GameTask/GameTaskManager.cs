@@ -1,6 +1,7 @@
 using BetterGenshinImpact.Core.Config;
 using BetterGenshinImpact.Core.Recognition.OpenCv;
 using BetterGenshinImpact.Core.Script.Dependence.Model.TimerConfig;
+using BetterGenshinImpact.GameTask.AutoBoss.Assets;
 using BetterGenshinImpact.GameTask.AutoFight.Assets;
 using BetterGenshinImpact.GameTask.AutoFishing.Assets;
 using BetterGenshinImpact.GameTask.AutoGeniusInvokation.Assets;
@@ -151,6 +152,7 @@ internal class GameTaskManager
         MapLazyAssets.DestroyInstance();
         AutoEatAssets.DestroyInstance();
         AutoDomainAssets.DestroyInstance();
+        AutoBossAssets.DestroyInstance();
     }
 
     /// <summary>

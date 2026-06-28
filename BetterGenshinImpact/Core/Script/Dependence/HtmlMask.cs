@@ -145,6 +145,35 @@ public class HtmlMask : IDisposable
     /// </summary>
     public bool Exists(string id) => HtmlMaskWindow.Exists(id);
 
+    /// <summary>
+    /// 设置窗口的点击穿透模式
+    /// </summary>
+    /// <param name="windowId">窗口ID</param>
+    /// <param name="enabled">true=点击穿透，false=可交互</param>
+    public void SetClickThrough(string windowId, bool enabled)
+    {
+        HtmlMaskWindow.SetClickThrough(windowId, enabled);
+    }
+
+    /// <summary>
+    /// 获取窗口的点击穿透状态
+    /// </summary>
+    /// <param name="windowId">窗口ID</param>
+    /// <returns>true=点击穿透，false=可交互</returns>
+    public bool GetClickThrough(string windowId)
+    {
+        return HtmlMaskWindow.GetClickThrough(windowId);
+    }
+
+    /// <summary>
+    /// 切换窗口的点击穿透模式
+    /// </summary>
+    /// <param name="windowId">窗口ID</param>
+    public void ToggleClickThrough(string windowId)
+    {
+        HtmlMaskWindow.ToggleClickThrough(windowId);
+    }
+
     #endregion
 
     #region 消息通信
@@ -166,6 +195,30 @@ public class HtmlMask : IDisposable
         HtmlMaskWindow.NotifyFlush(windowId);
     }
 
+    /// <summary>
+    /// 响应 HTML 页面通过 window.htmlMask.request(...) 发起的请求。
+    /// </summary>
+    /// <param name="windowId">HTML 遮罩窗口 ID。</param>
+    /// <param name="requestId">从 Receive/Poll/PollAll 返回消息的 requestId 字段取得，不能由脚本自行生成。</param>
+    /// <param name="jsonData">响应数据，必须是合法 JSON 字符串。</param>
+    public void Respond(string windowId, string requestId, string jsonData)
+    {
+        if (string.IsNullOrWhiteSpace(requestId))
+            throw new ArgumentException("requestId cannot be empty", nameof(requestId));
+
+        if (!HtmlMaskWindow.Exists(windowId) || !_toHtmlQueues.TryGetValue(windowId, out var queue))
+            throw new InvalidOperationException($"HTML遮罩窗口不存在或已关闭: {windowId}");
+
+        queue.Enqueue(new Message
+        {
+            Url = "/__response__",
+            Data = ParseData(jsonData),
+            RequestId = requestId
+        });
+
+        HtmlMaskWindow.NotifyFlush(windowId);
+    }
+    
     /// <summary>
     /// 发送请求到HTML并等待响应
     /// </summary>
